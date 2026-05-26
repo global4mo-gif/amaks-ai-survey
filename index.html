@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Опросник AMAKS: семинар по искусственному интеллекту</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="https://www.amaks.ru/" target="_blank" rel="noreferrer">
+        <img src="https://www.amaks.ru/local/templates/amaks/markup/img/logo.png" alt="АМАКС">
+      </a>
+      <nav class="nav" aria-label="Навигация">
+        <a href="#priorities">Направления</a>
+        <a href="#cases">Кейсы</a>
+        <a href="#tasks">Ваши задачи</a>
+        <a class="local-download" href="/download">Excel</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <p class="eyebrow">26-27 февраля · корпоративный семинар</p>
+          <h1>Опросник AMAKS по практическому применению ИИ</h1>
+          <p class="lead">Ответы помогут собрать программу под реальные задачи инженерной компании: почта, встречи, тендеры, проектирование, производство, аналитика и ИИ-сотрудники.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#survey">Заполнить анкету</a>
+            <a class="button ghost local-download" href="/download">Скачать Excel</a>
+          </div>
+        </div>
+        <aside class="hero-note" aria-label="Информация">
+          <span class="note-number">7-10</span>
+          <span>минут на заполнение</span>
+          <small>Чем конкретнее кейсы, тем полезнее будет семинар.</small>
+        </aside>
+      </section>
+
+      <form id="survey" class="survey">
+        <section class="panel">
+          <div class="section-head">
+            <span>Часть 1</span>
+            <h2>О вас</h2>
+          </div>
+          <div class="grid two">
+            <label class="field">ФИО
+              <input name="fullName" type="text" autocomplete="name" required placeholder="Иванов Иван Иванович">
+            </label>
+            <label class="field">Ваш отдел
+              <select name="department" required id="departmentSelect"></select>
+            </label>
+          </div>
+          <label class="field optional hidden" id="departmentOtherWrap">Отдел: другое
+            <input name="departmentOther" type="text" placeholder="Укажите отдел">
+          </label>
+          <div id="introGroups" class="question-stack"></div>
+        </section>
+
+        <section class="panel" id="priorities">
+          <div class="section-head">
+            <span>Часть 2</span>
+            <h2>Приоритетные направления</h2>
+            <p>Выберите до 3 направлений, которые наиболее интересны лично вам.</p>
+          </div>
+          <div id="priorityDirections" class="options columns"></div>
+        </section>
+
+        <section class="panel" id="cases">
+          <div class="section-head">
+            <span>Часть 3</span>
+            <h2>Кейсы для демонстрации</h2>
+            <p>Отметьте всё, что хотели бы увидеть вживую.</p>
+          </div>
+          <div id="caseGroups" class="case-grid"></div>
+        </section>
+
+        <section class="panel" id="tasks">
+          <div class="section-head">
+            <span>Часть 4</span>
+            <h2>Ваши задачи</h2>
+            <p>Самая важная часть анкеты: реальные задачи помогут сделать программу прикладной.</p>
+          </div>
+          <div id="textQuestions" class="question-stack"></div>
+        </section>
+
+        <section class="panel">
+          <div class="section-head">
+            <span>Часть 5</span>
+            <h2>Ожидания от семинара</h2>
+          </div>
+          <div id="expectationGroups" class="question-stack"></div>
+        </section>
+
+        <section class="panel">
+          <div class="section-head">
+            <span>Часть 6</span>
+            <h2>Технические моменты</h2>
+          </div>
+          <div id="technicalGroups" class="question-stack"></div>
+        </section>
+
+        <div class="submit-bar">
+          <p id="status" role="status">Заполненные анкеты сохраняются в файл <strong>data/responses.xlsx</strong>.</p>
+          <button class="button primary" type="submit">Отправить анкету</button>
+        </div>
+      </form>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
