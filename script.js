@@ -322,6 +322,7 @@ const textQuestions = [
   ["hardRecurringTask", "Есть ли тяжёлая задача, которая регулярно повторяется и которую сложно отдать стажёру?"]
 ];
 
+const GOOGLE_SCRIPT_URL = "";
 const isStaticDemo = location.hostname.endsWith("github.io") || location.protocol === "file:";
 
 function choice(name, type, label) {
@@ -422,6 +423,9 @@ function setStatus(message, type) {
 }
 
 function defaultStatusText() {
+  if (isStaticDemo && GOOGLE_SCRIPT_URL) {
+    return "Онлайн-сбор включён: ответы отправляются в Google Таблицу AMAKS.";
+  }
   return isStaticDemo
     ? "Онлайн-версия на GitHub Pages работает как демо. Сбор всех анкет в Excel включается при локальном запуске python3 server.py."
     : "Заполненные анкеты сохраняются в файл data/responses.xlsx.";
@@ -429,7 +433,7 @@ function defaultStatusText() {
 
 render();
 
-if (isStaticDemo) {
+if (isStaticDemo && !GOOGLE_SCRIPT_URL) {
   document.querySelectorAll(".local-download").forEach((link) => {
     link.removeAttribute("href");
     link.setAttribute("aria-disabled", "true");
@@ -457,6 +461,29 @@ document.querySelector("#survey").addEventListener("submit", async (event) => {
   const form = event.currentTarget;
   const submitButton = form.querySelector('button[type="submit"]');
   const payload = collectForm(form);
+
+  if (isStaticDemo && GOOGLE_SCRIPT_URL) {
+    submitButton.disabled = true;
+    setStatus("Отправляю ответ в Google Таблицу...", "");
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      form.reset();
+      document.querySelector("#departmentOtherWrap").classList.add("hidden");
+      setStatus("Спасибо! Анкета отправлена в общую Google Таблицу. Excel можно скачать из неё через Файл -> Скачать -> Microsoft Excel.", "success");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (error) {
+      setStatus("Не удалось отправить ответ в Google Таблицу. Проверьте URL Apps Script.", "error");
+    } finally {
+      submitButton.disabled = false;
+    }
+    return;
+  }
 
   if (isStaticDemo) {
     const demoResponses = JSON.parse(localStorage.getItem("amaksSurveyDemoResponses") || "[]");
