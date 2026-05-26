@@ -322,7 +322,7 @@ const textQuestions = [
   ["hardRecurringTask", "Есть ли тяжёлая задача, которая регулярно повторяется и которую сложно отдать стажёру?"]
 ];
 
-const GOOGLE_SCRIPT_URL = "";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbys8nJ4unAahXaRD77ZtVxrX905WHt6GLUy5-acJ7InBtSH-5djrF5pgPesZPZ46mQ/exec";
 const isStaticDemo = location.hostname.endsWith("github.io") || location.protocol === "file:";
 
 function choice(name, type, label) {
