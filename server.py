@@ -3,6 +3,7 @@ import json
 import os
 import sys
 import zipfile
+import threading
 from datetime import datetime
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -14,6 +15,8 @@ ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
 JSONL_PATH = DATA_DIR / "responses.jsonl"
 XLSX_PATH = DATA_DIR / "responses.xlsx"
+
+file_lock = threading.Lock()
 
 HEADERS = [
     ("submitted_at", "Дата заполнения"),
@@ -179,9 +182,10 @@ def write_xlsx(responses):
         "xl/worksheets/sheet1.xml": worksheet_xml(responses),
     }
 
-    with zipfile.ZipFile(XLSX_PATH, "w", compression=zipfile.ZIP_DEFLATED) as xlsx:
-        for path, content in files.items():
-            xlsx.writestr(path, content)
+    with file_lock:
+        with zipfile.ZipFile(XLSX_PATH, "w", compression=zipfile.ZIP_DEFLATED) as xlsx:
+            for path, content in files.items():
+                xlsx.writestr(path, content)
 
 
 def append_response(payload):
@@ -190,8 +194,9 @@ def append_response(payload):
         "submitted_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         **payload,
     }
-    with JSONL_PATH.open("a", encoding="utf-8") as file:
-        file.write(json.dumps(record, ensure_ascii=False) + "\n")
+    with file_lock:
+        with JSONL_PATH.open("a", encoding="utf-8") as file:
+            file.write(json.dumps(record, ensure_ascii=False) + "\n")
     write_xlsx(load_responses())
     return record
 
